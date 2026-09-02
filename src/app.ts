@@ -45,7 +45,7 @@ function renderBookmarks(){
         const div =document.createElement("div")//ックマークを表示するための箱（div）を作る。
         div.innerHTML = `
           <h3>${bookmark.title}</h3>
-          <a href="${bookmark.url}"target="_blank">${bookmarkList.url}</a>
+          <a href="${bookmark.url}"target="_blank">${bookmark.url}</a>
           <p>${bookmark.memo}</p>
         `;
         bookmarkList.appendChild(div);
