@@ -1,4 +1,4 @@
-
+export{}
 const form=document.getElementById("bookmark-form") as HTMLFormElement;
 const titleInput=document.getElementById("title") as HTMLInputElement;
 const urlInput = document.getElementById("url") as HTMLInputElement;
