@@ -1,4 +1,3 @@
-"use strict";
 const form = document.getElementById("bookmark-form");
 const titleInput = document.getElementById("title");
 const urlInput = document.getElementById("url");
@@ -32,6 +31,13 @@ function renderBookmarks() {
           <a href="${bookmark.url}"target="_blank">${bookmark.url}</a>
           <p>${bookmark.memo}</p>
         `;
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "削除";
+        div.appendChild(deleteButton);
+        deleteButton.addEventListener("click", () => {
+            console.log(bookmark.id);
+        });
         bookmarkList.appendChild(div);
     });
 }
+
