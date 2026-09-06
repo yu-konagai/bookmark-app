@@ -3,7 +3,7 @@ const titleInput = document.getElementById("title");
 const urlInput = document.getElementById("url");
 const memoTextarea = document.getElementById("memo");
 const bookmarkList = document.getElementById("bookmark-list");
-const bookmarks = [];
+let bookmarks = [];
 form.addEventListener("submit", (event) => {
     event.preventDefault(); //ページリロードを止める。リロードすると入力した値が消えるから。
     const title = titleInput.value;
@@ -35,7 +35,10 @@ function renderBookmarks() {
         deleteButton.textContent = "削除";
         div.appendChild(deleteButton);
         deleteButton.addEventListener("click", () => {
-            console.log(bookmark.id);
+            bookmarks = bookmarks.filter((item) => {
+                return item.id !== bookmark.id;
+            });
+            renderBookmarks();
         });
         bookmarkList.appendChild(div);
     });

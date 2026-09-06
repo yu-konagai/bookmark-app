@@ -13,7 +13,7 @@ type Bookmark={
     isFavorite:boolean;
 }
 
-const bookmarks:Bookmark[]=[];
+let bookmarks:Bookmark[]=[];
 
 form.addEventListener("submit",(event)=>{
     event.preventDefault();//ページリロードを止める。リロードすると入力した値が消えるから。
@@ -52,7 +52,10 @@ function renderBookmarks(){
           deleteButton.textContent = "削除"
           div.appendChild(deleteButton);
           deleteButton.addEventListener("click",()=>{
-            console.log(bookmark.id)
+            bookmarks=bookmarks.filter((item)=>{
+                return item.id !==bookmark.id;
+            });
+            renderBookmarks();
           })
 
         bookmarkList.appendChild(div);
