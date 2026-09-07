@@ -14,6 +14,7 @@ type Bookmark={
 }
 
 let bookmarks:Bookmark[]=[];
+let editingId: number | null = null;
 
 form.addEventListener("submit",(event)=>{
     event.preventDefault();//ページリロードを止める。リロードすると入力した値が消えるから。
@@ -24,19 +25,45 @@ form.addEventListener("submit",(event)=>{
     console.log(title);
     console.log(url);
     console.log(memo);
+    if(editingId !== null){
+    
+        bookmarks = bookmarks.map((item)=>{
+            if(item.id===editingId){
+                
+                item.title = titleInput.value;
+                item.url   = urlInput.value;
+                item.memo  = memoTextarea.value;
+                
+            return item ;
+            }
+            return item;
+        });
+        editingId  =null;
+    }else{
+            const newBookmark: Bookmark = {
+                id:Date.now(),
+                title:title,
+                url:url,
+                memo:memo,
+                isFavorite:false,
+            };//bookmarkのオブジェクトを作る
+   
+         
+    bookmarks.push(newBookmark);//配列bookmarksに追加する
+    }
+    titleInput.value  = "";
+    urlInput.value    = "";
+    memoTextarea.value= "";
+    renderBookmarks();//画面に表示する。
 
-const newBookmark: Bookmark = {
-    id:Date.now(),
-    title:title,
-    url:url,
-    memo:memo,
-    isFavorite:false,
-};//bookmarkのオブジェクトを作る
-bookmarks.push(newBookmark)//配列bookmarksに追加する
 
-renderBookmarks();//画面に表示する。
+});      
 
-})
+
+
+ 
+
+
 
 function renderBookmarks(){
     bookmarkList.innerHTML="";//上書き防止のため一度すべて消す
@@ -57,6 +84,18 @@ function renderBookmarks(){
             });
             renderBookmarks();
           })
+
+          const editButton = document.createElement("button");
+          editButton.textContent="編集"
+          div.appendChild(editButton);
+          editButton.addEventListener("click",()=>{
+              titleInput.value=bookmark.title;
+              urlInput.value=bookmark.url;
+              memoTextarea.value=bookmark.memo;
+
+              editingId = bookmark.id;
+
+          });
 
         bookmarkList.appendChild(div);
     
