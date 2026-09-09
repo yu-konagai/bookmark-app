@@ -1,8 +1,9 @@
 export{}
-const form=document.getElementById("bookmark-form") as HTMLFormElement;
-const titleInput=document.getElementById("title") as HTMLInputElement;
-const urlInput = document.getElementById("url") as HTMLInputElement;
+const form         = document.getElementById("bookmark-form") as HTMLFormElement;
+const titleInput   = document.getElementById("title") as HTMLInputElement;
+const urlInput     = document.getElementById("url") as HTMLInputElement;
 const memoTextarea = document.getElementById("memo") as HTMLTextAreaElement;
+const searchInput  = document.getElementById("search") as HTMLInputElement;
 
 const bookmarkList = document.getElementById("bookmark-list") as HTMLDivElement;
 type Bookmark={
@@ -61,14 +62,14 @@ form.addEventListener("submit",(event)=>{
 
 
 
- 
 
 
 
-function renderBookmarks(){
+
+function renderBookmarks(displayBookmarks: Bookmark[]=bookmarks){
     bookmarkList.innerHTML="";//上書き防止のため一度すべて消す
 
-    bookmarks.forEach((bookmark)=>{
+    displayBookmarks.forEach((bookmark)=>{
         const div =document.createElement("div")//ックマークを表示するための箱（div）を作る。
         div.innerHTML = `
           <h3>${bookmark.title}</h3>
@@ -101,3 +102,10 @@ function renderBookmarks(){
     
     });
 }
+searchInput.addEventListener("input",()=>{
+    const keyword=searchInput.value;
+    const filterBookmarks=bookmarks.filter((bookmark)=>{
+        return bookmark.title.includes(keyword);
+    })
+    renderBookmarks(filterBookmarks)
+})
