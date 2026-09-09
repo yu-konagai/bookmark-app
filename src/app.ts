@@ -76,7 +76,22 @@ function renderBookmarks(displayBookmarks: Bookmark[]=bookmarks){
           <a href="${bookmark.url}"target="_blank">${bookmark.url}</a>
           <p>${bookmark.memo}</p>
         `;
-          const deleteButton = document.createElement("button");
+        const favoriteButton=document.createElement("button");
+        if(bookmark.isFavorite){
+            favoriteButton.textContent="★お気に入り"
+            }  
+            else{
+            favoriteButton.textContent="☆お気に入り"
+            }  
+        favoriteButton.addEventListener("click",()=>{
+            favoriteButton.textContent="★お気に入り"
+          }) 
+       
+            div.appendChild(favoriteButton)
+         
+            const deleteButton = document.createElement("button");
+         
+
           deleteButton.textContent = "削除"
           div.appendChild(deleteButton);
           deleteButton.addEventListener("click",()=>{
@@ -108,4 +123,6 @@ searchInput.addEventListener("input",()=>{
         return bookmark.title.includes(keyword);
     })
     renderBookmarks(filterBookmarks)
+
+
 })
