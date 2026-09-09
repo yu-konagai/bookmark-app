@@ -36,8 +36,9 @@ form.addEventListener("submit",(event)=>{
                 item.memo  = memoTextarea.value;
                 
             return item ;
-            }
+            }else{
             return item;
+            }
         });
         editingId  =null;
     }else{
@@ -84,13 +85,15 @@ function renderBookmarks(displayBookmarks: Bookmark[]=bookmarks){
             favoriteButton.textContent="☆お気に入り"
             }  
         favoriteButton.addEventListener("click",()=>{
-            favoriteButton.textContent="★お気に入り"
+            bookmark.isFavorite =! bookmark.isFavorite;
+            renderBookmarks();
           }) 
        
             div.appendChild(favoriteButton)
-         
+            
+            
             const deleteButton = document.createElement("button");
-         
+            
 
           deleteButton.textContent = "削除"
           div.appendChild(deleteButton);

@@ -22,7 +22,9 @@ form.addEventListener("submit", (event) => {
                 item.memo = memoTextarea.value;
                 return item;
             }
-            return item;
+            else {
+                return item;
+            }
         });
         editingId = null;
     }
@@ -58,7 +60,8 @@ function renderBookmarks(displayBookmarks = bookmarks) {
             favoriteButton.textContent = "☆お気に入り";
         }
         favoriteButton.addEventListener("click", () => {
-            favoriteButton.textContent = "★お気に入り";
+            bookmark.isFavorite = !bookmark.isFavorite;
+            renderBookmarks();
         });
         div.appendChild(favoriteButton);
         const deleteButton = document.createElement("button");
