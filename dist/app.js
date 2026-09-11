@@ -6,6 +6,13 @@ const searchInput = document.getElementById("search");
 const bookmarkList = document.getElementById("bookmark-list");
 let bookmarks = [];
 let editingId = null;
+function saveBookmarks() {
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+}
+const savedBookmarks = localStorage.getItem("bookmarks");
+if (savedBookmarks) {
+    bookmarks = JSON.parse(savedBookmarks);
+}
 form.addEventListener("submit", (event) => {
     event.preventDefault(); //ページリロードを止める。リロードすると入力した値が消えるから。
     const title = titleInput.value;
@@ -42,6 +49,7 @@ form.addEventListener("submit", (event) => {
     urlInput.value = "";
     memoTextarea.value = "";
     renderBookmarks(); //画面に表示する。
+    saveBookmarks();
 });
 function renderBookmarks(displayBookmarks = bookmarks) {
     bookmarkList.innerHTML = ""; //上書き防止のため一度すべて消す
@@ -62,6 +70,7 @@ function renderBookmarks(displayBookmarks = bookmarks) {
         favoriteButton.addEventListener("click", () => {
             bookmark.isFavorite = !bookmark.isFavorite;
             renderBookmarks();
+            saveBookmarks();
         });
         div.appendChild(favoriteButton);
         const deleteButton = document.createElement("button");
@@ -72,6 +81,7 @@ function renderBookmarks(displayBookmarks = bookmarks) {
                 return item.id !== bookmark.id;
             });
             renderBookmarks();
+            saveBookmarks();
         });
         const editButton = document.createElement("button");
         editButton.textContent = "編集";
@@ -92,4 +102,5 @@ searchInput.addEventListener("input", () => {
     });
     renderBookmarks(filterBookmarks);
 });
+renderBookmarks();
 export {};
