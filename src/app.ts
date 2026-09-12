@@ -4,12 +4,14 @@ const titleInput   = document.getElementById("title") as HTMLInputElement;
 const urlInput     = document.getElementById("url") as HTMLInputElement;
 const memoTextarea = document.getElementById("memo") as HTMLTextAreaElement;
 const searchInput  = document.getElementById("search") as HTMLInputElement;
+const tagsInput     = document.getElementById("tags")as HTMLInputElement;
 
 const bookmarkList = document.getElementById("bookmark-list") as HTMLDivElement;
 type Bookmark={
     id:number;
     title:string;
     url:string;
+    tags:string[];
     memo:string;
     isFavorite:boolean;
 }
@@ -33,10 +35,10 @@ form.addEventListener("submit",(event)=>{
     const title = titleInput.value;
     const url   = urlInput.value;
     const memo  = memoTextarea.value;
+    const tags   = tagsInput.value.split(",").map((tag)=>{
+        return tag.trim();
+    });
 
-    console.log(title);
-    console.log(url);
-    console.log(memo);
     if(editingId !== null){
     
         bookmarks = bookmarks.map((item)=>{
@@ -44,6 +46,7 @@ form.addEventListener("submit",(event)=>{
                 
                 item.title = titleInput.value;
                 item.url   = urlInput.value;
+                item.tags  = tags;
                 item.memo  = memoTextarea.value;
                 
             return item ;
@@ -57,6 +60,7 @@ form.addEventListener("submit",(event)=>{
                 id:Date.now(),
                 title:title,
                 url:url,
+                tags:tags,
                 memo:memo,
                 isFavorite:false,
             };//bookmarkのオブジェクトを作る
@@ -66,6 +70,7 @@ form.addEventListener("submit",(event)=>{
     }
     titleInput.value  = "";
     urlInput.value    = "";
+    tagsInput.value          = "";
     memoTextarea.value= "";
     renderBookmarks();//画面に表示する。
     saveBookmarks();
@@ -83,12 +88,28 @@ function renderBookmarks(displayBookmarks: Bookmark[]=bookmarks){
     bookmarkList.innerHTML="";//上書き防止のため一度すべて消す
 
     displayBookmarks.forEach((bookmark)=>{
+        
         const div =document.createElement("div")//ックマークを表示するための箱（div）を作る。
         div.innerHTML = `
           <h3>${bookmark.title}</h3>
           <a href="${bookmark.url}"target="_blank">${bookmark.url}</a>
           <p>${bookmark.memo}</p>
         `;
+
+        bookmark.tags.forEach((tag)=>{
+            const tagSpan = document.createElement("span");
+            tagSpan.textContent = `#${tag}`;
+            tagSpan.addEventListener("click",()=>{
+                const tagsFilterBookmarks=bookmarks.filter((bookmark)=>{
+                    return bookmark.tags.includes(tag);
+                });
+                renderBookmarks(tagsFilterBookmarks);
+            });
+                
+            
+            div.appendChild(tagSpan);
+        });
+
         const favoriteButton=document.createElement("button");
         if(bookmark.isFavorite){
             favoriteButton.textContent="★お気に入り"
@@ -105,7 +126,7 @@ function renderBookmarks(displayBookmarks: Bookmark[]=bookmarks){
             div.appendChild(favoriteButton)
             
             
-            const deleteButton = document.createElement("button");
+        const deleteButton = document.createElement("button");
             
 
           deleteButton.textContent = "削除"
@@ -118,20 +139,22 @@ function renderBookmarks(displayBookmarks: Bookmark[]=bookmarks){
             saveBookmarks();
           })
 
-          const editButton = document.createElement("button");
+        const editButton = document.createElement("button");
           editButton.textContent="編集"
           div.appendChild(editButton);
           editButton.addEventListener("click",()=>{
               titleInput.value=bookmark.title;
               urlInput.value=bookmark.url;
+              tagsInput.value = bookmark.tags.join(",");
               memoTextarea.value=bookmark.memo;
 
               editingId = bookmark.id;
 
           });
-
+   
         bookmarkList.appendChild(div);
     
+        
     });
 }
 searchInput.addEventListener("input",()=>{

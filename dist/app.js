@@ -3,6 +3,7 @@ const titleInput = document.getElementById("title");
 const urlInput = document.getElementById("url");
 const memoTextarea = document.getElementById("memo");
 const searchInput = document.getElementById("search");
+const tagsInput = document.getElementById("tags");
 const bookmarkList = document.getElementById("bookmark-list");
 let bookmarks = [];
 let editingId = null;
@@ -18,14 +19,15 @@ form.addEventListener("submit", (event) => {
     const title = titleInput.value;
     const url = urlInput.value;
     const memo = memoTextarea.value;
-    console.log(title);
-    console.log(url);
-    console.log(memo);
+    const tags = tagsInput.value.split(",").map((tag) => {
+        return tag.trim();
+    });
     if (editingId !== null) {
         bookmarks = bookmarks.map((item) => {
             if (item.id === editingId) {
                 item.title = titleInput.value;
                 item.url = urlInput.value;
+                item.tags = tags;
                 item.memo = memoTextarea.value;
                 return item;
             }
@@ -40,6 +42,7 @@ form.addEventListener("submit", (event) => {
             id: Date.now(),
             title: title,
             url: url,
+            tags: tags,
             memo: memo,
             isFavorite: false,
         }; //bookmarkのオブジェクトを作る
@@ -47,6 +50,7 @@ form.addEventListener("submit", (event) => {
     }
     titleInput.value = "";
     urlInput.value = "";
+    tagsInput.value = "";
     memoTextarea.value = "";
     renderBookmarks(); //画面に表示する。
     saveBookmarks();
@@ -60,6 +64,17 @@ function renderBookmarks(displayBookmarks = bookmarks) {
           <a href="${bookmark.url}"target="_blank">${bookmark.url}</a>
           <p>${bookmark.memo}</p>
         `;
+        bookmark.tags.forEach((tag) => {
+            const tagSpan = document.createElement("span");
+            tagSpan.textContent = `#${tag}`;
+            tagSpan.addEventListener("click", () => {
+                const tagsFilterBookmarks = bookmarks.filter((bookmark) => {
+                    return bookmark.tags.includes(tag);
+                });
+                renderBookmarks(tagsFilterBookmarks);
+            });
+            div.appendChild(tagSpan);
+        });
         const favoriteButton = document.createElement("button");
         if (bookmark.isFavorite) {
             favoriteButton.textContent = "★お気に入り";
@@ -89,6 +104,7 @@ function renderBookmarks(displayBookmarks = bookmarks) {
         editButton.addEventListener("click", () => {
             titleInput.value = bookmark.title;
             urlInput.value = bookmark.url;
+            tagsInput.value = bookmark.tags.join(",");
             memoTextarea.value = bookmark.memo;
             editingId = bookmark.id;
         });
