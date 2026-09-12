@@ -105,7 +105,6 @@ function renderBookmarks(displayBookmarks: Bookmark[]=bookmarks){
                 });
                 renderBookmarks(tagsFilterBookmarks);
             });
-                
             
             div.appendChild(tagSpan);
         });
